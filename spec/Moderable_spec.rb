@@ -23,6 +23,17 @@ RSpec.describe Moderable do
     end
   end
 
+    # Test initialisation sans texte
+  describe 'Initialization without text' do
+    let(:moderable) { ModerableTest.new }
+
+    it 'initializes without text' do
+      expect(moderable.txt_to_check).to eq([])
+    end
+  end
+
+
+
   # Test initialisation avec un seul texte
   describe 'Initialization with a single text' do
     let(:text) { "imbecile" }
@@ -63,6 +74,7 @@ RSpec.describe Moderable do
       expect(moderable.is_accepted).to eq([{ text: "s'il te plaît", acceptable: true }, { text: "Bonjour, comment ça va?", acceptable: true }])
     end
   end
+
 
 
  end

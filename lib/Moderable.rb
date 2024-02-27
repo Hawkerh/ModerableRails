@@ -42,12 +42,19 @@ module Moderable
     def initialize(*texts)
       @txt_to_check = texts.each_with_index.map { |text, index| ModText.new(text, index) }
       @is_accepted = []
+      @observer = proc { |mod_text| observer_logic(mod_text) }
       add_observers_to_mod_texts
       moderate_texts
     end
 
     def self.moderation_rate
       @moderation_rate
+    end
+
+    def self.add_text(text)
+      nText = ModText.new(text, @txt_to_check.length)
+      nText.add_observer(@observer, :call)
+      @txt_to_check << ModText.new(nText, @txt_to_check.length)
     end
 
     # @param value [Float] le taux de modération accepté
@@ -74,8 +81,7 @@ module Moderable
 
     # Cette méthode ajoute un observateur à chaque ModText
     def add_observers_to_mod_texts
-      observer = proc { |mod_text| observer_logic(mod_text) }
-      @txt_to_check.each { |modtext| modtext.add_observer(observer, :call) }
+      @txt_to_check.each { |modtext| modtext.add_observer(@observer, :call) }
     end
 
     # Cette méthode est definie dans le bloc de code passé à add_observer
